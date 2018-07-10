@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    comment = db.relationship('Comment', backref='author', lazy='dynamic')
+    logs = db.relationship('Logs', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -33,12 +33,23 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
-class Comment(db.Model):
-    __tablename__ = 'comment'
+class Logs(db.Model):
+    __tablename__ = 'logs'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(200))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Comment {}>'.format(self.body)
+        return '<Log {}>'.format(self.body)
+
+class HC(db.Model):
+    __tablename__ = 'hc'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    ip = db.Column(db.String(16))
+    comment = db.Column(db.String(200))
+    created = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<HC {}>'.format(self.name)
