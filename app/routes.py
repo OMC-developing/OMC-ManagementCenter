@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm
@@ -6,7 +7,6 @@ from app.models import User, Logs, HC
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user, login_required
 from datetime import datetime
-import helpers
 
 
 @app.before_request
@@ -20,7 +20,7 @@ def before_request():
 @app.route('/index')
 def index():
     posts = Logs.query.all()
-    return render_template('index.html', title='Домашняя страница', posts=posts)
+    return render_template('index.html', title='Homepage', posts=posts)
     
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -31,14 +31,14 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Неправильный логин или пароль')
+            flash('Wrong username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-    return render_template('login.html', title='Войти', form=form)
+    return render_template('login.html', title='Enter', form=form)
 
 
 @app.route('/logout')
@@ -57,9 +57,9 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Пошли гулять!')
+        flash("Let's have fun!")
         return redirect(url_for('login'))
-    return render_template('register.html', title='Регистрация', form=form)
+    return render_template('register.html', title='Registration', form=form)
 
 
 @app.route('/user/<username>')
@@ -78,10 +78,10 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('Изменения сохранены!')
+        flash('Changes saved!')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='Изменить профиль', form=form)
+    return render_template('edit_profile.html', title='Change password', form=form)
 

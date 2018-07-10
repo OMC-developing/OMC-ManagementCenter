@@ -10,13 +10,12 @@
     </head>
     <body>
         <div>
-            Аф!
-            <a href="{{ url_for('index') }}">На главную</a>
+            <a href="{{ url_for('index') }}">To main page</a>
             {% if current_user.is_anonymous %}
-                <a href="{{ url_for('login') }}">Зайти</a>
+                <a href="{{ url_for('login') }}">Log In</a>
             {% else %}
-                <a href="{{ url_for('user', username=current_user.username) }}">Ваш профиль</a>
-                <a href="{{ url_for('logout') }}">Выйти</a>
+                <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+                <a href="{{ url_for('logout') }}">Exit</a>
             {% endif %}
         </div>
         <hr>
